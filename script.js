@@ -5,7 +5,7 @@ var timestamps = [];
 var dataArray = [];
 var googleDataArray = [['ID', 'Hour', 'Day', 'Series', 'Messages'], ['0', 1, 1, 'no', 0]];
 
-const DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+const DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
 // Check for the various File API support.
 if (window.File && window.FileReader && window.FileList && window.Blob) {
@@ -19,7 +19,7 @@ document.querySelector('#files').addEventListener('change', handleFileSelect, fa
 class WhatsAppTimestamp {
 
     constructor(datestring) {
-        const re = /^(\d+)\/(\d+)\/(\d+) (\d+):(\d+):(\d+) ((?:AM|PM))/;
+        const re = /^(\d+)\/(\d+)\/(\d+),? (\d+):(\d+):(\d+) ((?:AM|PM))/;
         let match = re.exec(datestring);
         let day = Number(match[1]);
         let month = Number(match[2]);
@@ -47,16 +47,20 @@ function handleFileSelect(evt) {
 
     reader.readAsText(chatHistory);
 
-    var re = /^(\d+\/\d+\/\d+ \d+:\d+:\d+ (?:AM|PM)): (.*?): ([\s\S]*?)(?=\n^\d+\/\d+\/\d+ \d+:\d+:\d+ (?:AM|PM))/gm;
+    var re = /^(\d+\/\d+\/\d+,? \d+:\d+:\d+ (?:AM|PM)): (.*?): ([\s\S]*?)(?=\n^\d+\/\d+\/\d+,? \d+:\d+:\d+ (?:AM|PM))/gm;
 
     reader.onload = function (event) {
         var match = '';
         while (match != null) {
             match = re.exec(event.target.result);
             if (match != null) {
-                timestamps.push(new WhatsAppTimestamp(match[1]));
                 matches.push(match);
+                timestamps.push(new WhatsAppTimestamp(match[1]));
             }
+        }
+        if (matches.length == 0) {
+            alert('Oops, it looks like this file is probably not a whatsapp conversation.');
+            return;
         }
 
         initialiseDataArray();
