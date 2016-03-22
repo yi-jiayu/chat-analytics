@@ -21,7 +21,7 @@ cd <project-folder>
 npm install
 ```
 
-To run developement server:
+To run development server:
 ```bash
 node server.js
 ```
