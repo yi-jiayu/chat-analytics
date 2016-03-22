@@ -21,7 +21,7 @@
 <input type="file" id="files" name="files[]"/>
 <div id="series_chart_div"></div>
 <input type="button" id="getPngLink" value="Get png link"><span id="pngLink"></span>
-
+<div id="chartRangeFilter"></div>
 <script type="text/javascript" src="script.js"></script>
 <script type="text/javascript">
     var daysTicks = [{v: 6, f: 'Sunday'}, {v: 5, f: 'Monday'}, {v: 4, f: 'Tuesday'}, {v: 3, f: 'Wednesday'}, {
@@ -69,11 +69,16 @@
 
         google.visualization.events.addListener(chart, 'ready', function () {
             document.querySelector('#getPngLink').addEventListener('click', function () {
-                document.querySelector('#pngLink').innerHTML = `<a download="${title || 'empty-chart'}.png" href="${chart.getImageURI()}">link</a>`;
+                document.querySelector('#pngLink').innerHTML = `<a download="${title || 'empty-chart'}.png" href="${chart.getImageURI()}">download</a>`;
             })
         });
 
         chart.draw(data, options);
+
+        var chartRangeFilter = new google.visualization.ControlWrapper({
+            controlType: 'ChartRangeFilter',
+            containerId: 'chartRangeFilter'
+        });
     }
 </script>
 </body>
