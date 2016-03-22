@@ -1,23 +1,37 @@
 <html>
 <head>
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
+    <style>
+    	html * {
+    		font-family: 'Roboto', sans-serif;
+    	}
+    </style>
 </head>
 <body>
 <input type="file" id="files" name="files[]" />
-<div id="series_chart_div" style="width: 1440px; height: 900px;"></div>
+<div id="series_chart_div" style="flex: 1; height: 800px"></div>
     <script type="text/javascript" src="script.js"></script>
     <script type="text/javascript">
+    	var daysTicks = [{v: 1, f: 'Sunday'}, {v: 2, f: 'Monday'}, {v: 3, f: 'Tuesday'}, {v: 4, f: 'Wednesday'}, {v: 5, f: 'Thursday'}, {v: 6, f: 'Friday'}, {v: 7, f: 'Saturday'}];
+        var timeTicks = [];
+        timeTicks.push({v: 1, f: '12a'});
+        for (var i = 1; i < 12 ; i++) timeTicks.push({v: i+1, f: '' + i + 'a'});
+        timeTicks.push({v: 13, f: '12p'});
+        for (var i = 1; i < 12 ; i++) timeTicks.push({v: i+13, f: '' + i + 'p'});
+
         google.charts.load('current', {'packages':['corechart']});
+        google.charts.setOnLoadCallback(drawSeriesChart);
 
         function drawSeriesChart() {
 
             var data = google.visualization.arrayToDataTable(googleDataArray);
 
             var options = {
-                hAxis: {title: 'Time', gridlines: {color: 'transparent'}, baselineColor: 'transparent', viewWindow: {min: -1, max: 24}},
-                vAxis: {title: 'Day', gridlines: {color: 'transparent'}, baselineColor: 'transparent', viewWindow: {min: -1, max: 7}},
-                bubble: {textStyle: {fontSize: 11, color: 'none'}},
-                series: {'': {color: 'black', visibleInLegend: false}}
+                hAxis: {gridlines: {color: 'transparent'}, maxValue: 25, minValue: 0, ticks: timeTicks, textStyle: {color: '#666'}},
+                vAxis: {gridlines: {color: 'transparent'}, maxValue: 8, minValue: 0, ticks: daysTicks },
+                bubble: {textStyle: {fontSize: 11, color: 'none'}, stroke: 'transparent'},
+                series: {'': {color: 'black', visibleInLegend: false}, 'no': {color: 'transparent', visibleInLegend: false}}
             };
 
             var chart = new google.visualization.BubbleChart(document.getElementById('series_chart_div'));

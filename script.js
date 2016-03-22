@@ -3,9 +3,9 @@
 var matches = [];
 var timestamps = [];
 var dataArray = [];
-var googleDataArray = [['ID', 'Hour', 'Day', 'Series', 'Messages']];
+var googleDataArray = [['ID', 'Hour', 'Day', 'Series', 'Messages'], ['0', 1, 1, 'no', 0]];
 
-const DAYS = ['SUNDAY', 'MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY']
+const DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
 
 // Check for the various File API support.
 if (window.File && window.FileReader && window.FileList && window.Blob) {
@@ -62,7 +62,6 @@ function handleFileSelect(evt) {
         initialiseDataArray();
         populateDataArray();
         formatDataArray();
-        console.log(dataArray);
         drawSeriesChart();
     };
 }
@@ -85,6 +84,6 @@ function populateDataArray() {
 function formatDataArray() {
     for (var i = 0; i < dataArray.length; i++) {
         var obj = dataArray[i];
-        if (obj[2] != 0) googleDataArray.push(['' + DAYS[obj[0]] + ' ' + obj[1], obj[1], obj[0], '', obj[2]])
+        if (obj[2] != 0) googleDataArray.push(['' + DAYS[obj[0]] + ' ' + timeTicks[obj[1]].f, obj[1] + 1, obj[0] + 1, '', obj[2]])
     }
 }
