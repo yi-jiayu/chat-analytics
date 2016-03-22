@@ -19,15 +19,16 @@ document.querySelector('#files').addEventListener('change', handleFileSelect, fa
 class WhatsAppTimestamp {
 
     constructor(datestring) {
-        const re = /^(\d+)\/(\d+)\/(\d+),? (\d+):(\d+):(\d+) ((?:AM|PM))/;
+        const re = /^(\d+)\/(\d+)\/(\d+),? (\d+):(\d+)(?::\d+)? (AM|PM|am|pm)?/;
         let match = re.exec(datestring);
         let day = Number(match[1]);
         let month = Number(match[2]);
         let year = Number(match[3]);
         let hour = Number(match[4]);
         let minutes = Number(match[5]);
-        let ampm = match[7];
-        if (ampm == 'PM') hour += 12;
+        let ampm = match[6];
+        if (ampm && /PM|pm/.test(match[6])) hour += 12;
+
 
         this.date = new Date(year, month, day, hour, minutes);
         this.day = this.date.getDay();
@@ -47,7 +48,7 @@ function handleFileSelect(evt) {
 
     reader.readAsText(chatHistory);
 
-    var re = /^(\d+\/\d+\/\d+,? \d+:\d+:\d+ (?:AM|PM)): (.*?): ([\s\S]*?)(?=\n^\d+\/\d+\/\d+,? \d+:\d+:\d+ (?:AM|PM))/gm;
+    var re = /^(\d+\/\d+\/\d+,? \d+:\d+(?::\d+)?(?: (?:AM|PM|am|pm)?:| -)) (.*?): ([\s\S]*?)(?=^\d+\/\d+\/\d+,? \d+:\d+(?::\d+)?(?: (?:AM|PM|am|pm)?:| -) (.*?):)/gm;
 
     reader.onload = function (event) {
         var match = '';
