@@ -1,0 +1,85 @@
+<html>
+<head>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
+    <style>
+        html * {
+            font-family: 'Roboto', sans-serif;
+        }
+
+        #series_chart_div {
+            flex: 1;
+            height: 800px;
+        }
+
+        #pngLink {
+            margin: 0 16px 0;
+        }
+    </style>
+</head>
+<body>
+<input type="file" id="files" name="files[]"/>
+<div id="series_chart_div"></div>
+<input type="button" id="getPngLink" value="Get png link"><span id="pngLink"></span>
+<div id="chartRangeFilter"></div>
+<script type="text/javascript" src="script.js"></script>
+<script type="text/javascript">
+    var daysTicks = [{v: 6, f: 'Sunday'}, {v: 5, f: 'Monday'}, {v: 4, f: 'Tuesday'}, {v: 3, f: 'Wednesday'}, {
+        v: 2,
+        f: 'Thursday'
+    }, {v: 1, f: 'Friday'}, {v: 0, f: 'Saturday'}];
+    var timeTicks = [];
+    timeTicks.push({v: 0, f: '12a'});
+    for (let i = 1; i < 12; i++) timeTicks.push({v: i, f: '' + i + 'a'});
+    timeTicks.push({v: 12, f: '12p'});
+    for (let i = 1; i < 12; i++) timeTicks.push({v: i + 12, f: '' + i + 'p'});
+
+    google.charts.load('current', {'packages': ['corechart']});
+    google.charts.setOnLoadCallback(drawSeriesChart);
+
+    function drawSeriesChart(title) {
+        document.querySelector('#pngLink').innerHTML = '';
+
+        var data = google.visualization.arrayToDataTable(googleDataArray);
+
+        var options = {
+            title: title,
+            hAxis: {
+                gridlines: {color: 'transparent'},
+                maxValue: 24,
+                minValue: -1,
+                ticks: timeTicks,
+                textStyle: {color: '#666'},
+                baseline: -1
+            },
+            vAxis: {gridlines: {color: 'transparent'}, maxValue: 7, minValue: 0, ticks: daysTicks, baseline: -1},
+            bubble: {textStyle: {fontSize: 11, color: 'none', auraColor: 'none'}, stroke: 'transparent'},
+            series: {
+                '': {color: 'black', visibleInLegend: false},
+                'no': {color: 'transparent', visibleInLegend: false}
+            },
+            animation: {startup: true, duration: 400, easing: 'out'},
+            sizeAxis: {minSize: 0},
+            legend: {position: 'none'},
+            axisTitlesPosition: 'none',
+            chartArea: {left: '10%', top: '10%', height: '80%', width: '80%'}
+        };
+
+        var chart = new google.visualization.BubbleChart(document.getElementById('series_chart_div'));
+
+        google.visualization.events.addListener(chart, 'ready', function () {
+            document.querySelector('#getPngLink').addEventListener('click', function () {
+                document.querySelector('#pngLink').innerHTML = `<a download="${title || 'empty-chart'}.png" href="${chart.getImageURI()}">download</a>`;
+            })
+        });
+
+        chart.draw(data, options);
+
+        var chartRangeFilter = new google.visualization.ControlWrapper({
+            controlType: 'ChartRangeFilter',
+            containerId: 'chartRangeFilter'
+        });
+    }
+</script>
+</body>
+</html>
