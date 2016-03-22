@@ -13,25 +13,31 @@
 <div id="series_chart_div" style="flex: 1; height: 800px"></div>
     <script type="text/javascript" src="script.js"></script>
     <script type="text/javascript">
-    	var daysTicks = [{v: 1, f: 'Sunday'}, {v: 2, f: 'Monday'}, {v: 3, f: 'Tuesday'}, {v: 4, f: 'Wednesday'}, {v: 5, f: 'Thursday'}, {v: 6, f: 'Friday'}, {v: 7, f: 'Saturday'}];
+    	var daysTicks = [{v: 6, f: 'Sunday'}, {v: 5, f: 'Monday'}, {v: 4, f: 'Tuesday'}, {v: 3, f: 'Wednesday'}, {v: 2, f: 'Thursday'}, {v: 1, f: 'Friday'}, {v: 0, f: 'Saturday'}];
         var timeTicks = [];
-        timeTicks.push({v: 1, f: '12a'});
-        for (var i = 1; i < 12 ; i++) timeTicks.push({v: i+1, f: '' + i + 'a'});
-        timeTicks.push({v: 13, f: '12p'});
-        for (var i = 1; i < 12 ; i++) timeTicks.push({v: i+13, f: '' + i + 'p'});
+        timeTicks.push({v: 0, f: '12a'});
+        for (let i = 1; i < 12 ; i++) timeTicks.push({v: i, f: '' + i + 'a'});
+        timeTicks.push({v: 12, f: '12p'});
+        for (let i = 1; i < 12 ; i++) timeTicks.push({v: i+12, f: '' + i + 'p'});
 
         google.charts.load('current', {'packages':['corechart']});
         google.charts.setOnLoadCallback(drawSeriesChart);
 
-        function drawSeriesChart() {
+        function drawSeriesChart(title) {
 
             var data = google.visualization.arrayToDataTable(googleDataArray);
 
             var options = {
-                hAxis: {gridlines: {color: 'transparent'}, maxValue: 25, minValue: 0, ticks: timeTicks, textStyle: {color: '#666'}},
-                vAxis: {gridlines: {color: 'transparent'}, maxValue: 8, minValue: 0, ticks: daysTicks },
+                title: title,
+                hAxis: {gridlines: {color: 'transparent'}, maxValue: 24, minValue: -1, ticks: timeTicks, textStyle: {color: '#666'}, baseline: -1},
+                vAxis: {gridlines: {color: 'transparent'}, maxValue: 7, minValue: 0, ticks: daysTicks, baseline: -1},
                 bubble: {textStyle: {fontSize: 11, color: 'none'}, stroke: 'transparent'},
-                series: {'': {color: 'black', visibleInLegend: false}, 'no': {color: 'transparent', visibleInLegend: false}}
+                series: {'': {color: 'black', visibleInLegend: false}, 'no': {color: 'transparent', visibleInLegend: false}},
+                animation: {startup: true, duration: 400, easing: 'out'},
+                sizeAxis: {minSize: 0},
+                legend: {position: 'none'},
+                axisTitlesPosition: 'none',
+                chartArea: {left: '10%', top: '10%', height: '80%', width: '80%'}
             };
 
             var chart = new google.visualization.BubbleChart(document.getElementById('series_chart_div'));
