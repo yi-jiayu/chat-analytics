@@ -56,7 +56,9 @@ chatAnalytics.visualisation.PunchCard.prototype.draw = function (data, options) 
         {label: 'messages', type: 'number'}
     ]];
 
-    if (data != null) {
+    if (data.getNumberOfRows() === 1) {
+        newDataTable.push(['0', 0, 0, 'no', 0]);
+    } else {
         let daysHoursArray = [];
 
         // initialise daysHoursArray
@@ -78,8 +80,6 @@ chatAnalytics.visualisation.PunchCard.prototype.draw = function (data, options) 
             if (elem[2] > 0) newDataTable.push([`${DAYS[elem[0]]}`, elem[1], 6 - elem[0], '', elem[2]]);
         }
         newDataTable = google.visualization.arrayToDataTable(newDataTable);
-    } else {
-        newDataTable.push(['0', 0, 0, 'no', 0]);
     }
 
     let defaultOptions = {
@@ -110,6 +110,30 @@ chatAnalytics.visualisation.PunchCard.prototype.draw = function (data, options) 
     this.wrapper.setOptions(options);
 
     this.wrapper.draw();
+
+    google.visualization.events.trigger(this, 'ready');
+};
+
+chatAnalytics.visualisation.PunchCard.prototype.getImageURI = function () {
+    return this.wrapper.getChart().getImageURI();
+};
+
+/**
+ * Wrapper around a google.visualisation.Histogram to generate a message frequency histogram
+ * @param container
+ * @constructor
+ */
+chatAnalytics.visualisation.Histogram = function (container) {
+    this.containerElement = container;
+    this.wrapper = new google.visualization.ChartWrapper({
+        chartType: 'Histogram',
+        containerId: this.containerElement.id
+    });
+};
+
+chatAnalytics.visualisation.Histogram.prototype.draw = function (data, options) {
+    data = new google.visualization.DataView(data);
+    data.hideColumns([1, 2]);
 };
 
 module.exports = chatAnalytics.visualisation;

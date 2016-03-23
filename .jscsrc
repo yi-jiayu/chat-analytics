@@ -1,3 +1,4 @@
 {
-  "requireSemicolons": true
+  "requireSemicolons": true,
+  "excludeFiles": ["lib/browser.js", "demo/browser.js"]
 }
