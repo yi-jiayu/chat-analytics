@@ -1,12 +1,10 @@
 "use strict";
 
-var messages = [];
-var timestamps = [];
-var dataArray = [];
 var googleDataArray = [[
     {label: 'timestamp', type: 'datetime'},
     {label: 'sender', type: 'string'},
-    {label: 'message', type: 'string'}]
+    {label: 'message', type: 'string'}],
+    [new Date(0), '', '']
 ];
 
 // Check for the various File API support.
@@ -35,13 +33,18 @@ class WhatsAppTimestamp {
 }
 
 function handleFileSelect(evt) {
+    // reset data
+    googleDataArray = [[
+        {label: 'timestamp', type: 'datetime'},
+        {label: 'sender', type: 'string'},
+        {label: 'message', type: 'string'}],
+        [new Date(0), '', '']
+    ];
+
     var files = evt.target.files;
     var chatHistory = files[0];
 
     var reader = new FileReader();
-    messages = [];
-    timestamps = [];
-    dataArray = [];
 
     reader.readAsText(chatHistory);
 
@@ -56,7 +59,7 @@ function handleFileSelect(evt) {
             }
         }
 
-        if (googleDataArray.length == 1) {
+        if (googleDataArray.length == 2) {
             alert('Oops, it looks like this file is probably not a whatsapp conversation.');
             return;
         }

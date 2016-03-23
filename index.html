@@ -30,24 +30,31 @@
     google.charts.load('current', {'packages': ['corechart']});
     google.charts.setOnLoadCallback(drawSeriesChart);
 
+    var wrapper;
+
     function drawSeriesChart(title) {
         document.querySelector('#pngLink').innerHTML = '';
 
-        var data = googleDataArray.length > 1 ? google.visualization.arrayToDataTable(googleDataArray) : null;
+        var data = google.visualization.arrayToDataTable(googleDataArray);
 
         let options = {
             title: title
         };
 
-        var chart = new chatAnalytics.visualisation.PunchCard(document.querySelector('#punchCardDiv'));
+        wrapper = new google.visualization.ChartWrapper({
+            chartType: 'chatAnalytics.visualisation.PunchCard',
+            containerId: 'punchCardDiv',
+            options: options,
+            dataTable: data
+        });
 
-        google.visualization.events.addListener(chart.wrapper, 'ready', function () {
+        google.visualization.events.addListener(wrapper, 'ready', function () {
             document.querySelector('#getPngLink').addEventListener('click', function () {
-                document.querySelector('#pngLink').innerHTML = `<a download="${title || 'empty-chart'}.png" href="${chart.wrapper.getChart().getImageURI()}">download</a>`;
+                document.querySelector('#pngLink').innerHTML = `<a download="${title || 'empty-chart'}.png" href="${wrapper.getChart().getImageURI()}">download</a>`;
             })
         });
 
-        chart.draw(data, options);
+        wrapper.draw();
     }
 </script>
 </html>
