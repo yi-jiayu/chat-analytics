@@ -22,5 +22,8 @@
     "visualisation",
     "visualization"
   ],
-  "homepage": "https://github.com/yi-jiayu/chat-analytics#readme"
+  "homepage": "https://github.com/yi-jiayu/chat-analytics#readme",
+  "dependencies": {
+    "extend": "^3.0.0"
+  }
 }
