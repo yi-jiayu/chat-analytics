@@ -97,7 +97,6 @@ chatAnalytics.visualisation.PunchCard.prototype.draw = function (data, options) 
             '': {color: 'black', visibleInLegend: false},
             'no': {color: 'transparent', visibleInLegend: false}
         },
-        animation: {startup: true, duration: 400, easing: 'out'},
         sizeAxis: {minSize: 0},
         legend: {position: 'none'},
         axisTitlesPosition: 'none',
@@ -114,6 +113,9 @@ chatAnalytics.visualisation.PunchCard.prototype.draw = function (data, options) 
     google.visualization.events.trigger(this, 'ready');
 };
 
+/**
+ * Alias for method in wrapped chart
+ */
 chatAnalytics.visualisation.PunchCard.prototype.getImageURI = function () {
     return this.wrapper.getChart().getImageURI();
 };

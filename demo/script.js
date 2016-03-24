@@ -4,7 +4,7 @@ var googleDataArray = [[
     {label: 'timestamp', type: 'datetime'},
     {label: 'sender', type: 'string'},
     {label: 'message', type: 'string'}],
-    [new Date(0), '', '']
+    [new Date(), '', '']
 ];
 
 // Check for the various File API support.
@@ -38,7 +38,7 @@ function handleFileSelect(evt) {
         {label: 'timestamp', type: 'datetime'},
         {label: 'sender', type: 'string'},
         {label: 'message', type: 'string'}],
-        [new Date(0), '', '']
+        [new Date(), '', '']
     ];
 
     var files = evt.target.files;
@@ -64,6 +64,8 @@ function handleFileSelect(evt) {
             return;
         }
 
-        drawSeriesChart(`${evt.target.files[0].name.replace('.txt', '')} (${googleDataArray.length - 1} messages)`);
+        chatName = evt.target.files[0].name.replace('.txt', '');
+        title = `${chatName} (${googleDataArray.length - 1} messages)`;
+        drawDashboard();
     };
 }

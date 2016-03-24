@@ -22,39 +22,50 @@
 <h1>Whatsapp Chat Analytics</h1>
 <p>Select your whatsapp chat log to find out when you and your friends are the most and least active!</p>
 <input type="file" id="files" name="files[]"/>
-<div id="punchCardDiv"></div>
 <input type="button" id="getPngLink" value="Get png link"><span id="pngLink"></span>
+<div id="dashboardDiv">
+    <div id="punchCardDiv"></div>
+    <div id="controlDiv"></div>
+</div>
 </body>
 <script type="text/javascript" src="script.js"></script>
 <script type="text/javascript">
-    google.charts.load('current', {'packages': ['corechart']});
-    google.charts.setOnLoadCallback(drawSeriesChart);
+    google.charts.load('current', {'packages': ['controls', 'corechart']});
+    google.charts.setOnLoadCallback(drawDashboard);
 
-    var wrapper;
+    var chatName;
+    var title;
 
-    function drawSeriesChart(title) {
-        document.querySelector('#pngLink').innerHTML = '';
+    function drawDashboard() {
+        var dashboard = new google.visualization.Dashboard(document.querySelector('#dashboardDiv'));
+
+        var rangeFilter = new google.visualization.ControlWrapper({
+            controlType: 'DateRangeFilter',
+            containerId: 'controlDiv',
+            options: {'filterColumnLabel': 'timestamp'}
+        });
+
+        var punchCard = new google.visualization.ChartWrapper({
+            chartType: 'chatAnalytics.visualisation.PunchCard',
+            containerId: 'punchCardDiv',
+            options: {title: title}
+        });
 
         var data = google.visualization.arrayToDataTable(googleDataArray);
 
-        let options = {
-            title: title
-        };
-
-        wrapper = new google.visualization.ChartWrapper({
-            chartType: 'chatAnalytics.visualisation.PunchCard',
-            containerId: 'punchCardDiv',
-            options: options,
-            dataTable: data
+        google.visualization.events.addListener(rangeFilter, 'statechange', function () {
+            let numMessages = punchCard.getDataTable().getNumberOfRows();
+            punchCard.setOption('title', `${chatName} (${numMessages - 1} messages)`);
         });
 
-        google.visualization.events.addListener(wrapper, 'ready', function () {
+        google.visualization.events.addListener(dashboard, 'ready', function () {
             document.querySelector('#getPngLink').addEventListener('click', function () {
-                document.querySelector('#pngLink').innerHTML = `<a download="${title || 'empty-chart'}.png" href="${wrapper.getChart().getImageURI()}">download</a>`;
+                document.querySelector('#pngLink').innerHTML = `<a download="${title || 'empty-chart'}.png" href="${punchCard.getChart().getImageURI()}">download</a>`;
             })
         });
 
-        wrapper.draw();
+        dashboard.bind(rangeFilter, punchCard);
+        dashboard.draw(data);
     }
 </script>
 </html>
