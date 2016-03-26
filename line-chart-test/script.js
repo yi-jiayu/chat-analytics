@@ -72,9 +72,11 @@ chatAnalytics.util.createMessageFreqTable = function (data) {
     let numRows = data.getNumberOfRows();
 
     let msgFreqTable = [[
-        {label: 'timestamp', type: 'datetime'},
-        {label: 'total message count', type: 'number'}
+        {label: 'timestamp', type: 'datetime'}
+        // , {label: 'total message count', type: 'number'}
     ]];
+
+    data.sort(0);
 
     for (let participant of participants) {
         msgFreqTable[0].push({label: participant, type: 'number'});
@@ -82,18 +84,18 @@ chatAnalytics.util.createMessageFreqTable = function (data) {
 
     let Row = function () {
         this.timestamp = null;
-        this.totalMsgCount = 0;
+        // this.totalMsgCount = 0;
         for (let participant of participants) this[participant] = 0;
     };
 
     Row.prototype.toArray = function () {
         let arr = [];
-        arr.push(this.timestamp, this.totalMsgCount);
+        arr.push(this.timestamp
+            // , this.totalMsgCount
+        );
         for (let participant of participants) arr.push(this[participant]);
         return arr;
     };
-
-    console.log(new Row());
 
     let minute = null;
     let currRow;
@@ -101,15 +103,19 @@ chatAnalytics.util.createMessageFreqTable = function (data) {
     for (var i = 0; i < numRows; i++) {
         let timestamp = new Date(data.getValue(i, 0));
         let sender = data.getValue(i, 1);
-        if (timestamp.getHours() != minute) {
-            minute = timestamp.getHours();
-            if (currRow) msgFreqTable.push(currRow.toArray());
+        if (timestamp.getDate() != minute) {
+            minute = timestamp.getDate();
+            if (currRow) {
+                msgFreqTable.push(currRow.toArray());
+                console.log(currRow);
+            }
             currRow = new Row();
-            currRow.timestamp = timestamp;
-            currRow.totalMsgCount = 1;
+            let day = new Date(timestamp.getFullYear(), timestamp.getMonth() + 1, timestamp.getDate());
+            currRow.timestamp = day;
+            // currRow.totalMsgCount = 1;
             currRow[sender] = 1;
         } else {
-            currRow.totalMsgCount++;
+            // currRow.totalMsgCount++;
             currRow[sender]++;
         }
     }
