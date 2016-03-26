@@ -1,0 +1,61 @@
+<html>
+<head>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript" src="browser.js"></script>
+    <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
+    <style>
+        html * {
+            font-family: 'Roboto', sans-serif;
+        }
+
+        #punchCardDiv {
+            flex: 1;
+            height: 800px;
+        }
+
+        #pngLink {
+            margin: 0 16px 0;
+        }
+    </style>
+</head>
+<body>
+<h1>Whatsapp Chat Analytics</h1>
+<p>Select your whatsapp chat log to find out when you and your friends are the most and least active!</p>
+<input type="file" id="files" name="files[]"/>
+<input type="button" id="getPngLink" value="Get png link"><span id="pngLink"></span>
+<input type="button" onclick="drawDashboard()" value="draw visualisation">
+<div id="dashboardDiv">
+    <div id="punchCardDiv"></div>
+    <div id="controlDiv"></div>
+</div>
+</body>
+<script type="text/javascript" src="script.js"></script>
+<script type="text/javascript">
+    google.charts.load('current', {'packages': ['controls', 'corechart']});
+    google.charts.setOnLoadCallback(drawDashboard);
+
+    var chatName;
+    var title;
+    var binned;
+
+    function drawDashboard() {
+        var dashboard = new google.visualization.Dashboard(document.querySelector('#dashboardDiv'));
+
+        var rangeFilter = new google.visualization.ControlWrapper({
+            controlType: 'ChartRangeFilter',
+            containerId: 'controlDiv',
+            options: {'filterColumnLabel': 'timestamp', ui: {chartType: 'LineChart'}}
+        });
+
+        var punchCard = new google.visualization.ChartWrapper({
+            chartType: 'LineChart',
+            containerId: 'punchCardDiv'
+        });
+
+        var data = binned;
+
+        dashboard.bind(rangeFilter, punchCard);
+        dashboard.draw(data);
+    }
+</script>
+</html>
