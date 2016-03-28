@@ -8,6 +8,7 @@ through the "Email Conversation" option to analyse and visualise the conversatio
 ## Supported visualisations
 
 ### Punch card
+![Punch card example](http://yi-jiayu.github.io/chat-analytics/media/punch-card.png)
 Just like the Punch Card repository graph on GitHub, the punch card view shows the frequency
 of messages sent in a conversation based on day of week and time of day, with the number of
 messages sent represented by bubble size.
